@@ -69,39 +69,211 @@
     </form>
 
     <section id="error-btns">
-      <button>Console Log</button>
-      <button>Console Error</button>
-      <button>Console Count</button>
-      <button>Console Warn</button>
-      <button>Console Assert</button>
-      <button>Console Clear</button>
-      <button>Console Dir</button>
-      <button>Console dirxml</button>
-      <button>Console Group Start</button>
-      <button>Console Group End</button>
-      <button>Console Table</button>
-      <button>Start Timer</button>
-      <button>End Timer</button>
-      <button>Console Trace</button>
-      <button>Trigger a Global Error</button>
+      <button id="log">Console Log</button>
+      <button id="error">Console Error</button>
+      <button id="count">Console Count</button>
+      <button id="warn">Console Warn</button>
+      <button id="assert">Console Assert</button>
+      <button id="clear">Console Clear</button>
+      <button id="dir">Console Dir</button>
+      <button id="dirxml">Console dirxml</button>
+      <button id="groupStart">Console Group Start</button>
+      <button id="groupEnd">Console Group End</button>
+      <button id="table">Console Table</button>
+      <button id="startTimer">Start Timer</button>
+      <button id="endTimer">End Timer</button>
+      <button id="trace">Console Trace</button>
+      <button id="globalError">Trigger a Global Error</button>
     </section>
   </main>
 
+  <script src="https://cdn.trackjs.com/agent/v3/latest/t.js"></script>
+  <script>
+    window.TrackJS && TrackJS.install( { 
+      token: "8be6013035ab451b81275a16500ddfbe"
+      // for more configuration options, see https://docs.trackjs.com
+    });
+  </script>
+               
+
   <script>
     let form = document.querySelector('form');
+    let output;
+    let firstNum;
+    let secondNum;
+    let operator;
+    const calculator = [];
+
     form.addEventListener('submit', e => {
       e.preventDefault();
-      let output = document.querySelector('output');
-      let firstNum = document.querySelector('#first-num').value;
-      let secondNum = document.querySelector('#second-num').value;
-      let operator = document.querySelector('#operator').value;
+      output = document.querySelector('output');
+      firstNum = document.querySelector('#first-num').value;
+      secondNum = document.querySelector('#second-num').value;
+      operator = document.querySelector('#operator').value;
       output.innerHTML = eval(`${firstNum} ${operator} ${secondNum}`);
+      calculator.push([firstNum, secondNum, operator, output.innerHTML]);
     });
 
     let errorBtns = Array.from(document.querySelectorAll('#error-btns > button'));
 
     // Start your code here
     // You may move this JS to another file if you wish
+
+    // console log
+    let log = document.getElementById('log');
+    log.addEventListener('click', a => {
+      console.log("output: " + output.innerHTML);
+    });
+
+    // console error
+    let error = document.getElementById('error');
+    error.addEventListener('click', b => {
+      if (isNaN(firstNum) || isNaN(secondNum)) {
+        console.error("input a number")
+      }
+    });
+
+    // console count
+    let count = document.getElementById('count');
+    count.addEventListener('click', c => {
+      console.count();
+    })
+
+    // console warn
+    let warn = document.getElementById('warn');
+      warn.addEventListener('click', d => {
+      console.warn(`I warned you not to press this button...why did you`);
+    })
+
+    // console table
+    let table = document.getElementById('table');
+    table.addEventListener('click', e => {
+      console.table(calculator);
+    });
+
+    // console assert
+    let assert = document.getElementById('assert');
+    const message = "the output is not positive";
+    assert.addEventListener('click', f => {
+      console.assert(output.innerHTML > -1, '%o', {output, message});
+    });
+
+    // console clean
+    let clear = document.getElementById('clear');
+    clear.addEventListener('click', g => {
+      console.clear();
+    });
+
+    // console dir
+    let dir = document.getElementById('dir');
+    dir.addEventListener('click', h => {
+      console.dir(dir);
+    });
+
+    // console dirxml
+    let dirxml = document.getElementById('dirxml');
+    dirxml.addEventListener('click', i => {
+      console.dirxml(dirxml);
+    });
+
+    // console group start
+    let groupStart = document.getElementById('groupStart');
+    groupStart.addEventListener('click', j => {
+      console.group("group");
+      console.log("in the group");
+    });
+
+    // console group end
+    let groupEnd = document.getElementById('groupEnd');
+    groupEnd.addEventListener('click', k => {
+      console.groupEnd();
+      console.log("out of the group");
+    });
+
+    // console start timer
+    let startTimer = document.getElementById('startTimer');
+    startTimer.addEventListener('click', l => {
+      console.log("start timer");
+      console.time();
+    });
+
+    // console end timer
+    let endTimer = document.getElementById('endTimer');
+    endTimer.addEventListener('click', m => {
+      console.log("end timer");
+      console.timeEnd();
+    });
+
+    // console trace
+    let trace = document.getElementById('trace');
+    trace.addEventListener('click', n => {
+      firstFunction();
+      function firstFunction() {
+        secondFunction();
+      }
+      function secondFunction() {
+        console.trace();
+      }
+    });
+    
+    // console global error
+    let globalError = document.getElementById('globalError');
+    globalError.addEventListener('click', o => {
+      window.onerror = function() {
+        console.error("something went wrong");
+      }
+      let hello = hi + 1; 
+    });
+
+    //try catch
+    try {
+      console.log("Start of try");
+      thisIsABadVariable;
+    }
+    catch {
+      console.log("we found an error");
+    }
+
+    // custom error
+    class cusError extends Error {
+      constructor(message) {
+        super(message) // (1)
+        this.name = "cusError"; // (2)
+      }
+      return;
+    }
+
+    function customError() {
+      throw new cusError("whoopsie");
+    }
+
+    try {
+      customError();
+    } 
+    catch(err) {
+      console.log(err.message);
+      console.log(err.name); 
+    }
+
+    // global error handling
+    if (window.onerror) // then one exists
+      {
+       var oldError = window.onerror;
+       var newErrorHandler = function (errorMessage,url,lineNumber) {
+        console.error("an error appeard: ", errorMessage);
+       }
+       
+       window.onerror = newErrorHandler;
+      }
+
+      console.log("hi");
+    
+      TrackJS.track('Testing TrackJS!');
+
+      hihi;
+      howareyou;
+      thisshoulderror;
+  
   </script>
 </body>
 
